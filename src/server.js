@@ -11,5 +11,5 @@ app.get('/', function(req, res) {
 })
 
 app.listen(port, localhost, () => {
-    console.log(`hello I'm AI and running on host: http://${localhost}:${port}/`)
+    console.log(`hi guy I'm running on host: http://${localhost}:${port}/`)
 })
