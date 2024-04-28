@@ -50,6 +50,7 @@ const createNew = async (req, res, next) => {
         //khsau khi đã validate xong, có nghĩa là request hợp lệ và khi đó nó sẽ next sang tầng tiếp theo
         next()
     } catch (error) {
+        //tạo mới 1 object error ApiError gồm status code và message và chuyển nó sang bước kế tiếp
         next(new ApiError(StatusCodes.UNPROCESSABLE_ENTITY, new Error(error).message))
     }
 }

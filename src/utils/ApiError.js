@@ -1,4 +1,4 @@
-
+// viết hàm kế thừa chức năng Error của javascript để trả về object error tiêu chuẩn, đucowj dùng ở các chức năg tronhg system
 class ApiError extends Error {
     constructor(statusCode, message) {
 
