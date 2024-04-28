@@ -1,6 +1,7 @@
 import express from 'express'
 import { StatusCodes } from 'http-status-codes'
-import { boardValidation } from '../../validations/boardValidation';
+import { boardValidation } from '~/validations/boardValidation'
+import { boardController } from '~/controllers/boardController'
 
 const Router = express.Router()
 
@@ -11,6 +12,7 @@ Router.route('/')
             status: StatusCodes.OK
         })
     })
-    .post(boardValidation.createNew)
+    //ở đây khi next từ validate được trig lên thì nó sẽ chuyển sang controller
+    .post(boardValidation.createNew, boardController.createNew)
 
 export const boardRoute = Router

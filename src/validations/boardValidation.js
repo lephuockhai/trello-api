@@ -1,3 +1,5 @@
+//Validation, where process validate data from request (router) to make sure that data form is true
+// after success process, NEXT() to controller
 import Joi from 'joi'
 import { StatusCodes } from 'http-status-codes'
 
@@ -28,19 +30,24 @@ const createNew = async (req, res, next) => {
             .max(256)
             .trim()
             .strict()
+            .messages({
+                // custom message https://stackoverflow.com/a/68092831/23549533
+                'string.base': '{{#label}} must be a string',
+                'any.required': '{{#label}} is a required field',
+                'string.min': '{{#label}} should have a minimum length of {{#limit}}',
+                'string.max': '{{#label}} should have a maximum length of {{#limit}}',
+                'string.empty': '{{#label}} cannot be an empty field',
+                'string.trim': '{{#label}} must not have leading or trailing whitespace'
+            })
     })
 
     try {
-        // console.log('body::::',req.body)
-
         //abortEarly set thành false để khi trông 1 object request có nhiều lỗi validation cùng lúc nó sẽ trả về tất cả các lỗi được páht hiện
         //nếu không set giá trị cho abortEarly thì mặc định là true và nó sẽ return từng lỗi 1 mà nó phát hiện chứ không ruturn all error
         await correctCondition.validateAsync(req.body, { abortEarly: false})
-        //next( )
-        res.status(StatusCodes.CREATED).json({
-            message: "PORT11: API create new board",
-            status: StatusCodes.CREATED
-        })
+        
+        //khsau khi đã validate xong, có nghĩa là request hợp lệ và khi đó nó sẽ next sang tầng tiếp theo
+        next()
     } catch (error) {
         console.log(error)
         res.status(StatusCodes.UNPROCESSABLE_ENTITY).json({
