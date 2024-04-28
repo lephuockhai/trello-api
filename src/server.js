@@ -3,9 +3,12 @@ import express from 'express'
 import { COLSE_DB, CONNECT_DB, GET_DB } from '~/config/config.mongodb'
 import exitHook from 'async-exit-hook'
 import { env } from './config/environment'
+import { API_V1s } from './routes/v1'
 
 const START_SERVER = () => {
   const app = express()
+
+  app.use('/v1', API_V1s)
 
   const hostname = env.APP_HOST
   const port = env.APP_PORT
