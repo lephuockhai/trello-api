@@ -2,6 +2,7 @@
 // after success process, NEXT() to controller
 import Joi from 'joi'
 import { StatusCodes } from 'http-status-codes'
+import ApiError from '~/utils/ApiError'
 
 const createNew = async (req, res, next) => {
     // Note: Mặc định chúng ta không cần phải custom message ở phía BE làm gì vì để cho Front-end tự validate và custom message phía FE cho đep. 
@@ -49,10 +50,7 @@ const createNew = async (req, res, next) => {
         //khsau khi đã validate xong, có nghĩa là request hợp lệ và khi đó nó sẽ next sang tầng tiếp theo
         next()
     } catch (error) {
-        console.log(error)
-        res.status(StatusCodes.UNPROCESSABLE_ENTITY).json({
-            errors: new Error(error).message
-        })
+        next(new ApiError(StatusCodes.UNPROCESSABLE_ENTITY, new Error(error).message))
     }
 }
 

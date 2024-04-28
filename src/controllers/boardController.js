@@ -2,6 +2,7 @@
 // before that, validate success and pass to controller
 
 import { StatusCodes } from 'http-status-codes'
+import ApiError from '../utils/ApiError'
 
 const createNew = async (req, res, next) => {
     try {
@@ -15,17 +16,13 @@ const createNew = async (req, res, next) => {
         //directional data to services level
 
         //after received data then response to Client
+        // throw new ApiError(StatusCodes.BAD_GATEWAY, 'bad request')
 
         res.status(StatusCodes.CREATED).json({
             message: "PORT from Controller: API create new board",
             status: StatusCodes.CREATED
         })
-    } catch (error) {
-        res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({
-            status: StatusCodes.INTERNAL_SERVER_ERROR,
-            errors: error.message
-        })
-    }
+    } catch (error) { next(error) }
 }
 
 export const boardController = {
