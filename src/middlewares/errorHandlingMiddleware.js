@@ -1,6 +1,8 @@
 //hàm trả về object khi có lỗi
+//middleware error handling check error for controller
 import { StatusCodes, getReasonPhrase } from 'http-status-codes'
 import { env } from '~/config/environment'
+
 
 export const errorHandlingMiddleware = (err, req, res, next) => {
 
