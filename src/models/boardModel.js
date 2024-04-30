@@ -1,8 +1,9 @@
 
 //trước đó đã tạo validation 1 lần ở tần cùng tên trước khi đưa vào controller nhưng vào model trước khi lưu vào hcusng ta cần phải validation 1 lần nữa để chắc chắn rằng dữ liệu đã được xử lý ok
-import Joi, { date } from 'joi'
+import Joi, { date, object } from 'joi'
 import { GET_DB } from '~/config/config.mongodb'
 import { OBJECT_ID_RULE, OBJECT_ID_RULE_MESSAGE } from '~/utils/validators'
+import { ObjectId } from 'mongodb';
 
 // define collection Name & schema
 const BOARD_COLLECTION_NAME = 'boards'
@@ -22,16 +23,22 @@ const BOARD_COLLECTION_SCHEMA = Joi.object({
     _destroy: Joi.boolean().default(false) //board này có được xoá hay chưa 
 })
 
+//validation dữ liệu trước khi insert vào model
+const validateBeforeCreate = async (data) => {
+    return await BOARD_COLLECTION_SCHEMA.validateAsync(data, { abortEarly: false })
+}
+
 const createNew = async (data) => {
     try { 
-        return await GET_DB().collection(BOARD_COLLECTION_NAME).insertOne(data)
+        const validData = await validateBeforeCreate(data)
+        return await GET_DB().collection(BOARD_COLLECTION_NAME).insertOne(validData)
     } catch (error) { throw new Error(error) } //có new Error để trả về stack trace
 }
 
 const findById = async (id) => {
     try {
         return await GET_DB().collection(BOARD_COLLECTION_NAME).findOne({
-            _id: id 
+            _id: new ObjectId(id) 
         })
 
     } catch (error) { throw new Error(error) }
