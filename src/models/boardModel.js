@@ -44,9 +44,21 @@ const findById = async (id) => {
     } catch (error) { throw new Error(error) }
 }
 
+//query (aggregate) to take all columns & cards of board
+// hôm nay sẽ giống như findbyid và sẽ update phần aggregate tiếp ở phàn tiếp
+const getDetails = async (boardId) => {
+    try {
+        return await GET_DB().collection(BOARD_COLLECTION_NAME).findOne({
+            _id: new ObjectId(boardId) 
+        })
+
+    } catch (error) { throw new Error(error) }
+}
+
 export const boardModel = {
     BOARD_COLLECTION_NAME,
     BOARD_COLLECTION_SCHEMA,
     createNew,
-    findById
+    findById,
+    getDetails
 }

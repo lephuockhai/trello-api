@@ -1,5 +1,7 @@
 //process logic after handling error on the back step
+import { StatusCodes } from 'http-status-codes'
 import { boardModel } from '~/models/boardModel'
+import ApiError from '~/utils/ApiError'
 import { slugify } from '~/utils/formaters'
 
 const createNew = async (reqBody) => {
@@ -23,7 +25,19 @@ const createNew = async (reqBody) => {
         throw error //error ở đây sẽ trả về cho controller nên không cần new
     }
 }
+const getDetails = async (boardId) => {
+    try {
+        const board = await boardModel.getDetails(boardId)
+
+        if (!board) throw new ApiError(StatusCodes.NOT_FOUND, 'Board not found')
+        return board
+    } catch (error) {
+        //nếu như bên service có lỗi thì nó sẽ trả lỗi về controller
+        throw error //error ở đây sẽ trả về cho controller nên không cần new
+    }
+}
 
 export const boardService = {
-    createNew
+    createNew,
+    getDetails
 }
