@@ -7,13 +7,6 @@ import { boardService } from '~/services/boardService'
 
 const createNew = async (req, res, next) => {
     try {
-        // console.log('body::::',req.body)
-        // console.log('query::::',req.query)
-        // console.log('params::::',req.params)
-        // console.log('files::::',req.files)
-        // console.log('cookies::::',req.cookies)
-        // console.log('jwtDecoded::::',req.jwtDecoded)
-        
         //directional data to services level
         const createdBoard = await boardService.createNew(req.body)
 

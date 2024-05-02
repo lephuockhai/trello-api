@@ -2,7 +2,9 @@
 module.exports = {
   env: { es2020: true, node: true },
   extends: [
-    'eslint:recommended'
+    'eslint:recommended', 
+    "plugin:react/recommended", 
+    "plugin:react-hooks/recommended"
   ],
   parser: '@babel/eslint-parser',
   parserOptions: {
@@ -11,7 +13,7 @@ module.exports = {
     requireConfigFile: false,
     allowImportExportEverywhere: true
   },
-  plugins: [],
+  plugins: ["react", "react-hooks"],
   rules: {
     // Common
     'no-console': 1,
