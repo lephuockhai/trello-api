@@ -1,10 +1,13 @@
 // eslint-disable-next-line no-console
 import express from 'express'
+import cors from 'cors'
 import { CLOSE_DB, CONNECT_DB, GET_DB } from '~/config/config.mongodb'
 import exitHook from 'async-exit-hook'
 import { env } from './config/environment'
 import { API_V1s } from './routes/v1'
-import { errorHandlingMiddleware } from './middlewares/errorHandlingMiddleware';
+import { errorHandlingMiddleware } from './middlewares/errorHandlingMiddleware'
+import { corsOption } from './config/cors'
+
 
 const HOST = env.APP_HOST
 const PORT = env.APP_PORT
@@ -12,6 +15,9 @@ const AUTHOR = env.AUTHOR
 
 const START_SERVER = () => {
   const app = express()
+
+  //process cors, check domain on list pass
+  app.use(cors(corsOption))
 
   //Enable req.body json data
   app.use(express.json())

@@ -3,6 +3,7 @@
 import Joi from 'joi'
 import { StatusCodes } from 'http-status-codes'
 import ApiError from '~/utils/ApiError'
+import { BOARD_TYPES } from '~/utils/constants'
 
 const createNew = async (req, res, next) => {
     // Note: Mặc định chúng ta không cần phải custom message ở phía BE làm gì vì để cho Front-end tự validate và custom message phía FE cho đep. 
@@ -30,16 +31,8 @@ const createNew = async (req, res, next) => {
             .min(3)
             .max(256)
             .trim()
-            .strict()
-            .messages({
-                // custom message https://stackoverflow.com/a/68092831/23549533
-                'string.base': '{{#label}} must be a string',
-                'any.required': '{{#label}} is a required field',
-                'string.min': '{{#label}} should have a minimum length of {{#limit}}',
-                'string.max': '{{#label}} should have a maximum length of {{#limit}}',
-                'string.empty': '{{#label}} cannot be an empty field',
-                'string.trim': '{{#label}} must not have leading or trailing whitespace'
-            })
+            .strict(),
+        type: Joi.string().valid(BOARD_TYPES.PUBLIC, BOARD_TYPES.PRIVATE).required()
     })
 
     try {
