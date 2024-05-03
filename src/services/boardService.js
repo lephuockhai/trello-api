@@ -28,7 +28,6 @@ const createNew = async (reqBody) => {
 }
 const getDetails = async (boardId) => {
     try {
-        console.log(boardId)
         const board = await boardModel.getDetails(boardId)
         if (!board) throw new ApiError(StatusCodes.NOT_FOUND, 'Board not found')
 
@@ -47,8 +46,6 @@ const getDetails = async (boardId) => {
 
         //xoá card bên ngoài column vì bây giờ cards đã được thêm vào trong column
         delete resBoard.cards
-        console.log(resBoard)
-
         return resBoard
     } catch (error) {
         //nếu như bên service có lỗi thì nó sẽ trả lỗi về controller
