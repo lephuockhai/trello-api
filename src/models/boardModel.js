@@ -1,6 +1,6 @@
 
 //trước đó đã tạo validation 1 lần ở tần cùng tên trước khi đưa vào controller nhưng vào model trước khi lưu vào hcusng ta cần phải validation 1 lần nữa để chắc chắn rằng dữ liệu đã được xử lý ok
-import Joi, { date, object } from 'joi'
+import Joi from 'joi'
 import { GET_DB } from '~/config/config.mongodb'
 import { OBJECT_ID_RULE, OBJECT_ID_RULE_MESSAGE } from '~/utils/validators'
 import { ObjectId } from 'mongodb'
@@ -74,10 +74,23 @@ const getDetails = async (boardId) => {
     } catch (error) { throw new Error(error) }
 }
 
+//update giá trị columnId vào mảng columnOrderIds
+const pushColumnorderIds = async (column) => {
+    try {
+        const result = await GET_DB().collection(BOARD_COLLECTION_NAME).findOneAndUpdate(
+            { _id: new ObjectId(column.boardId) }, //filter
+            { $push: { columnOrderIds: new ObjectId(column._id) } }, // append dữ liệu
+            { returnDocument: 'after' } //set false để trả về dữ liệu đã được update
+        )
+        return result.value
+    } catch (error) { throw new Error(error) }
+}
+
 export const boardModel = {
     BOARD_COLLECTION_NAME,
     BOARD_COLLECTION_SCHEMA,
     createNew,
     findById,
-    getDetails
+    getDetails,
+    pushColumnorderIds
 }
