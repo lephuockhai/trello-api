@@ -20,7 +20,6 @@ const getDetails = async (req, res, next) => {
     try {
         // console.log('params::::',req.params)
         const boardId =  req.params.id
-        
         //advance sẽ lấy board của 1 user cụ thể ra theo permission
         //directional data to services level
         const board = await boardService.getDetails(boardId)
@@ -32,7 +31,18 @@ const getDetails = async (req, res, next) => {
     } catch (error) { next(error) } // nếu bị lỗi trả về error tập trung
 }
 
+const updateColumnIds = async (req, res, next) => {
+    try {
+        const boardId =  req.params.id
+
+        const updateBoard = await boardService.updateColumnIds(boardId, req.body)
+
+        res.status(StatusCodes.OK).json(updateBoard)
+    } catch (error) { next(error) }
+}   
+
 export const boardController = {
     createNew,
-    getDetails
+    getDetails,
+    updateColumnIds
 }

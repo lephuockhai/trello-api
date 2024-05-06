@@ -53,7 +53,19 @@ const getDetails = async (boardId) => {
     }
 }
 
+const updateColumnIds = async ( boardId, reqBody ) => {
+    try {
+        const updateData = {
+            ...reqBody,
+            updateAt: Date.now()
+        }
+        const updateBoard = await boardModel.updateColumnIds(boardId, updateData)
+
+        return updateBoard
+    } catch (error) { throw error }
+}
 export const boardService = {
     createNew,
-    getDetails
+    getDetails,
+    updateColumnIds
 }

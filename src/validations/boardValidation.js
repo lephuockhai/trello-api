@@ -4,6 +4,7 @@ import Joi from 'joi'
 import { StatusCodes } from 'http-status-codes'
 import ApiError from '~/utils/ApiError'
 import { BOARD_TYPES } from '~/utils/constants'
+import { OBJECT_ID_RULE, OBJECT_ID_RULE_MESSAGE } from '~/utils/validators'
 
 const createNew = async (req, res, next) => {
     // Note: Mặc định chúng ta không cần phải custom message ở phía BE làm gì vì để cho Front-end tự validate và custom message phía FE cho đep. 
@@ -48,6 +49,38 @@ const createNew = async (req, res, next) => {
     }
 }
 
+const updateColumnIds = async (req, res, next) => {
+    //khong required trong update
+    const correctCondition = Joi.object({
+        title: Joi.string()
+            .min(3)
+            .max(50)
+            .trim() //xác định ở trước và sau input value có khoảng trống không.. và phải đi kèm với strict (bắt buộc)
+            .strict(),
+        description: Joi.string()
+            .min(3)
+            .max(256)
+            .trim()
+            .strict(),
+        type: Joi.string().valid(BOARD_TYPES.PUBLIC, BOARD_TYPES.PRIVATE),
+        columnOrderIds: Joi.array().items(
+            Joi.string().pattern(OBJECT_ID_RULE).message(OBJECT_ID_RULE_MESSAGE)
+        )
+    })
+
+    try {
+        //dùng abortearly set false để cho phép trả về tất cả lỗi trong calidation
+        await correctCondition.validateAsync(req.body, { 
+            abortEarly: false,
+            allowUnknown: true //cho phép các trường không cso trong form validation trên ví dụ columnOrderIds
+        })
+        next()
+    } catch (error) {
+        next(new ApiError(StatusCodes.UNPROCESSABLE_ENTITY, new Error(error).message))
+    }
+}
+
 export const boardValidation = {
-    createNew
+    createNew,
+    updateColumnIds
 }
