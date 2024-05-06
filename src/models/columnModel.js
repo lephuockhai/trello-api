@@ -53,10 +53,30 @@ const pushCardorderIds = async (card) => {
     } catch (error) { throw new Error(error) }
 }
 
+const INVALID_UPDATE_FIELDS = ['_id', 'createdAt'] 
+
+const updateCardOrderIds = async (columnId, updateColumn) => {
+    try {
+        Object.keys(updateColumn).forEach(fieldName => {
+            if (INVALID_UPDATE_FIELDS.includes(fieldName)) {
+                delete updateColumn[fieldName]
+            }
+        })
+
+        const result = await GET_DB().collection(COLUMN_COLLECTION_NAME).findOneAndUpdate(
+            {_id: new ObjectId(columnId)},
+            {$set: updateColumn},
+            {returnDocument: 'after'} //set false để trả về dữ liệu đã được update
+        )
+        return result
+    } catch (error) { throw new Error(error) }
+}
+
 export const columnModel = {
     COLUMN_COLLECTION_NAME,
     COLUMN_COLLECTION_SCHEMA,
     createNew,
     findById,
-    pushCardorderIds
+    pushCardorderIds,
+    updateCardOrderIds
 }
