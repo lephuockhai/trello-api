@@ -49,7 +49,7 @@ const pushCardorderIds = async (card) => {
             { $push: { cardOrderIds: new ObjectId(card._id) } }, // append dữ liệu
             { returnDocument: 'after' } //set false để trả về dữ liệu đã được update
         )
-        return result.value
+        return result
     } catch (error) { throw new Error(error) }
 }
 
