@@ -98,12 +98,24 @@ const updateColumnIds = async (boardId, updateData) => {
                 delete updateData[fieldName]
             }
         })
+
+        if (updateData.columnOrderIds) {
+            updateData.columnOrderIds = updateData.columnOrderIds.map(columnId => (
+                new ObjectId(columnId)))
+        } else {
+            updateData.columnOrderIds = []
+        }
+
         const result = await GET_DB().collection(BOARD_COLLECTION_NAME).findOneAndUpdate(
             { _id: new ObjectId(boardId) },
             { $set: updateData },
             { returnDocument: 'after' } //set false để trả về dữ liệu đã được update
         )
     } catch (error) { throw new Error(error) }
+}
+
+const updateCardToDifferenceColumn = () => {
+
 }
 
 export const boardModel = {
@@ -113,5 +125,6 @@ export const boardModel = {
     findById,
     getDetails,
     pushColumnorderIds,
-    updateColumnIds
+    updateColumnIds,
+    updateCardToDifferenceColumn
 }

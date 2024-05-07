@@ -1,5 +1,3 @@
-import { cloneDeep } from 'lodash'
-import { ObjectId } from 'mongodb'
 import { boardModel } from '~/models/boardModel'
 import { columnModel } from '~/models/columnModel'
 
@@ -29,7 +27,7 @@ const updateCardOrderIds = async (columnId, reqBody) => {
             createdAt: Date.now()
         }
     
-        const updateColumn = columnModel.updateCardOrderIds(columnId, updateData)
+        const updateColumn = columnModel.update(columnId, updateData)
     
         return updateColumn
     } catch (error) { throw error }
