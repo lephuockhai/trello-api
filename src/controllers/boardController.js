@@ -40,9 +40,17 @@ const updateColumnIds = async (req, res, next) => {
         res.status(StatusCodes.OK).json(updateBoard)
     } catch (error) { next(error) }
 }   
+const updateCardToDifferenceColumn =async (req, res, next) => {
+    try {
+        const result = await boardService.updateCardToDifferenceColumn(req.body)
+
+        res.status(StatusCodes.OK).json(result)
+    } catch (error) { next(error) }
+}
 
 export const boardController = {
     createNew,
     getDetails,
-    updateColumnIds
+    updateColumnIds,
+    updateCardToDifferenceColumn
 }

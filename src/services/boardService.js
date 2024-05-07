@@ -2,6 +2,8 @@
 import { StatusCodes } from 'http-status-codes'
 import { cloneDeep } from 'lodash'
 import { boardModel } from '~/models/boardModel'
+import { cardModel } from '~/models/cardModel'
+import { columnModel } from '~/models/columnModel'
 import ApiError from '~/utils/ApiError'
 import { slugify } from '~/utils/formaters'
 
@@ -41,6 +43,7 @@ const getDetails = async (boardId) => {
             // column.cards = resBoard.cards.filter(card => card.columnId.toString() === column._id.toString())
 
             //với equal thì nó là method của mongodb hổ trợ so sánh object
+            //gặp lỗi equals khong phải là fnc vì khi đưa columnId vào thì nó là dạng string
             column.cards = resBoard.cards.filter(card => card.columnId.equals(column._id))
         })
 
@@ -64,8 +67,38 @@ const updateColumnIds = async ( boardId, reqBody ) => {
         return updateBoard
     } catch (error) { throw error }
 }
+
+const updateCardToDifferenceColumn = async (reqBody) => {
+    try {
+
+        //1: xoá cardId ở cardOrderIds của column cũ chứa nó
+        await columnModel.update(reqBody.preColumnId, {
+            cardOrderIds: reqBody.preCardOrderIds,
+            createdAt: Date.now()
+        })
+
+        //2: thêm cardId vừa kéo vào cardOrderIds cảu column mới
+        await columnModel.update(reqBody.nextColumnId, {
+            cardOrderIds: reqBody.nextCardOrderIds,
+            createdAt: Date.now()
+        })
+
+        //3. update columnId cho card đó
+
+        await cardModel.update(reqBody.currentCardId, {
+            columnId: reqBody.nextColumnId
+        })
+
+        // const updateBoard = await boardModel.updateCardToDifferenceColumn(boardId, updateData)
+
+
+        return {message: "success"}
+    } catch (error) { throw error }
+}
+
 export const boardService = {
     createNew,
     getDetails,
-    updateColumnIds
+    updateColumnIds,
+    updateCardToDifferenceColumn
 }

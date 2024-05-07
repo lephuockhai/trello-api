@@ -42,9 +42,31 @@ const findById = async (id) => {
     } catch (error) { throw new Error(error) }
 }
 
+const INVALID_UPDATE_FIELDS = ['_id', 'boardId', 'createdAt'] 
+
+const update = async (cardId, updateCard) => {
+    try {
+        Object.keys(updateCard).forEach(fieldName => {
+            if (INVALID_UPDATE_FIELDS.includes(fieldName)) {
+                delete updateCard[fieldName]
+            }
+        })
+
+        if(updateCard.columnId) updateCard.columnId = new ObjectId(updateCard.columnId)
+
+        const result = await GET_DB().collection(CARD_COLLECTION_NAME).findOneAndUpdate(
+            {_id: new ObjectId(cardId)},
+            {$set: updateCard},
+            {returnDocument: 'after'} //set false để trả về dữ liệu đã được update
+        )
+        return result
+    } catch (error) { throw new Error(error) }
+}
+
 export const cardModel = {
   CARD_COLLECTION_NAME,
   CARD_COLLECTION_SCHEMA,
   createNew,
   findById,
+  update
 }
