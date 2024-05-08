@@ -9,12 +9,12 @@ import { errorHandlingMiddleware } from './middlewares/errorHandlingMiddleware'
 import { corsOption } from './config/cors'
 
 
-const HOST = env.APP_HOST
-const PORT = env.APP_PORT
+const HOST = env.LOCAL_DEV_APP_HOST
+const PORT = env.LOCAL_DEV_APP_PORT
 const AUTHOR = env.AUTHOR
 
 const START_SERVER = () => {
-  const app = express()
+  const app = express() 
 
   //process cors, check domain on list pass
   app.use(cors(corsOption))
@@ -28,13 +28,17 @@ const START_SERVER = () => {
   //middleware xử lý lỗi tập trung
   app.use(errorHandlingMiddleware)
 
-  app.get('/', async (req, res) => {
-    res.end('<h1>Hello World!</h1><hr>')
-  })
-
-  app.listen(PORT, HOST, () => {
-    console.log(`3. Hello ${env.AUTHOR}, I am running at http://${ HOST }:${ PORT }/`)
-  })
+  //production support for RENDER
+  if (env.BUILD_MODE === 'production') {
+    app.listen(process.env.PORT, () => {
+      console.log(`3. PRODUCTION Hello ${env.AUTHOR}, backend server is running successfully at port: ${process.env.PORT}`)
+    })
+  }
+  else {
+    app.listen(PORT, HOST, () => {
+      console.log(`3. LOCAL Hello ${env.AUTHOR}, I am running at http://${ HOST }:${ PORT }/`)
+    })
+  }
   //thực hiện các tác vụ cleanup trước khi dừng hẵn server
   // thư viện thay thế cho process.on ...
   exitHook(() => {
