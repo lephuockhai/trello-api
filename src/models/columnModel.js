@@ -33,10 +33,10 @@ const createNew = async (data) => {
     } catch (error) { throw new Error(error) } //có new Error để trả về stack trace
 }
 
-const findById = async (id) => {
+const findById = async (columnId) => {
     try {
         return await GET_DB().collection(COLUMN_COLLECTION_NAME).findOne({
-            _id: new ObjectId(id) 
+            _id: new ObjectId(columnId) 
         })
     } catch (error) { throw new Error(error) }
 }
@@ -79,11 +79,20 @@ const update = async (columnId, updateColumn) => {
     } catch (error) { throw new Error(error) }
 }
 
+const deleteOneById = async (columnId) => {
+    try {
+        const result = await GET_DB().collection(COLUMN_COLLECTION_NAME).deleteOne({_id: new ObjectId(columnId)})
+        
+        return result
+    } catch (error) { throw new Error(error)}
+}
+
 export const columnModel = {
     COLUMN_COLLECTION_NAME,
     COLUMN_COLLECTION_SCHEMA,
     createNew,
     findById,
     pushCardorderIds,
-    update
+    update,
+    deleteOneById
 }
