@@ -1,7 +1,8 @@
 
 
 export const WHITELIST_DOMAINS = [
-    'http://localhost:5173',
+    // 'http://localhost:5173', // không cần localhost này nauwx vì ở file cors ở config đã luôn cho phép môi trường dev
+    ''
     // '' spend for domain product
 ]
 
