@@ -11,10 +11,10 @@ import { StatusCodes } from 'http-status-codes'
 
 export const corsOption = {
     origin: function (origin, callback) {
-        // cho phép việc call api dùng postman khi sử dụng môi trường dev
-        // khi sử dụng postman thì origin mặc định là undefined
+        // bỏ origin (postman) nếu mô itruongf là dev thì cho qua luôn  
+        if (env.BUILD_MODE === 'dev') return callback(null, true) // value1 null: no error, true: pass
 
-        if (!origin && env.BUILD_MODE === 'dev') return callback(null, true) // value1 null: no error, true: pass
+        //nếu như ở môi truòng production
 
         //check that, domain is allow access?
         if (WHITELIST_DOMAINS.includes(origin)) return callback(null, true) // value1 null: no error, true: pass
