@@ -41,10 +41,10 @@ const createNew = async (data) => {
     } catch (error) { throw new Error(error) } //có new Error để trả về stack trace
 }
 
-const findById = async (id) => {
+const findById = async (boardId) => {
     try {
         return await GET_DB().collection(BOARD_COLLECTION_NAME).findOne({
-            _id: new ObjectId(id) 
+            _id: new ObjectId(boardId) 
         })
     } catch (error) { throw new Error(error) }
 }
@@ -88,6 +88,17 @@ const pushColumnorderIds = async (column) => {
     } catch (error) { throw new Error(error) }
 }
 
+const pullColumnorderIds = async (column) => {
+    try {
+        const result = await GET_DB().collection(BOARD_COLLECTION_NAME).findOneAndUpdate(
+            { _id: new ObjectId(column.boardId) }, //filter
+            { $pull: { columnOrderIds: new ObjectId(column._id) } }, // append dữ liệu
+            { returnDocument: 'after' } //set false để trả về dữ liệu đã được update
+        )
+        return result
+    } catch (error) { throw new Error(error) }
+}
+
 const updateColumnIds = async (boardId, updateData) => {
     try {
 
@@ -114,10 +125,6 @@ const updateColumnIds = async (boardId, updateData) => {
     } catch (error) { throw new Error(error) }
 }
 
-const updateCardToDifferenceColumn = () => {
-
-}
-
 export const boardModel = {
     BOARD_COLLECTION_NAME,
     BOARD_COLLECTION_SCHEMA,
@@ -126,5 +133,5 @@ export const boardModel = {
     getDetails,
     pushColumnorderIds,
     updateColumnIds,
-    updateCardToDifferenceColumn
+    pullColumnorderIds
 }
