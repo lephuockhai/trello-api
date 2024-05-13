@@ -1,8 +1,9 @@
 import express from 'express'
 import { StatusCodes } from 'http-status-codes'
-import {boardRoute} from './boardRoute'
+import { boardRoute } from './boardRoute'
 import { columnRoute } from './columnRoute'
 import { cardRoute } from './cardRoute'
+import { userRoute } from './userRoute';
 
 const Router = express.Router()
 
@@ -12,6 +13,9 @@ Router.get('/status', (req, res, next) => {
         status: StatusCodes.OK
     })
 })
+
+//Auth route
+Router.use('/users', userRoute)
 
 //board API
 Router.use('/boards', boardRoute)

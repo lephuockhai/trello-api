@@ -10,3 +10,8 @@ export const BOARD_TYPES ={
     PUBLIC: 'public',
     PRIVATE: 'private'
 }
+
+export const ROLE_USER = {
+    ADMIN: 'admin',
+    CLIENT: 'client'
+}
